@@ -1,0 +1,113 @@
+<head>
+  <title>minstant</title>
+</head>
+
+<body>
+</body>
+
+<!-- this is the main template used by iron:router to build the page -->
+<template name="ApplicationLayout">
+	{{> yield "header"}}
+
+	<div class="container">
+	{{> yield "main"}}
+	</div>
+</template>
+
+<!-- top level template for the nav bar -->
+<template name="navbar">
+<nav class="navbar navbar-default">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="/">
+        coursera minstant!
+      </a>
+    </div>
+    <div class="nav navbar-nav navbar-right">
+    {{> loginButtons align="right"}}
+</div>
+  </div>
+</nav>
+</template>
+
+<!-- Top level template for the lobby page -->
+<template name="lobby_page">
+		<div class="container">
+			{{> available_user_list}}
+		</div>
+</template>
+
+<!-- display a list of users -->
+<template name="available_user_list">
+		<h2>Choose someone to chat with:</h2>
+		<div class="row">
+				{{#each users}}
+						{{> available_user}}
+				{{/each}}
+		</div>
+</template>
+
+<!-- display an individual user -->
+<template name="available_user">
+		<div class="col-md-2">
+				<div class="user_avatar">
+						{{#if isMyUser _id}}
+								<div class="bg-success">{{getUsername _id}} (YOU)
+										<br/>
+										<img src="/{{profile.avatar}}" class="avatar_img">
+								</div>
+								{{else}}
+										{{#if isLogon}}
+												<a href="/chat/{{_id}}">
+														{{getUsername _id}}
+														<br/>
+														<img src="/{{profile.avatar}}" class="avatar_img">
+												</a>
+												{{else}}
+														{{getUsername _id}}
+														<br/>
+														<img src="/{{profile.avatar}}" class="avatar_img">
+										{{/if}}
+						{{/if}}
+				</div>
+		</div>
+</template>
+
+
+<!-- Top level template for the chat page -->
+<template name="chat_page">
+		<div class="row">
+				<div class="col-xs-3">
+						<h3>{{find_opponent true}}</h3>
+						<img src="/{{find_opponent false}}"  class="avatar_img" />
+				</div>
+				<div class="col-xs-3 col-xs-offset-6">
+						<h3 style="text-align:right">{{find_me true}} ( ME )</h3>
+						<img src="/{{find_me false}}" class="avatar_img" align="right"/>
+				</div>
+		</div>
+		<h2>Type in the box below to send a message!</h2>
+		<div class="row">
+				<div class="col-md-12">
+						<div class="well well-lg">
+								{{#each messages}}
+										{{> chat_message}}
+								{{/each}}
+						</div>
+				</div>
+		</div>
+		<div class="row">
+				<div class="col-md-12">
+						<form class="js-send-chat">
+								<input class="input" type="text" name="chat" placeholder="type a message here...">
+								<button class="btn btn-default">send</button>
+						</form>
+				</div>
+		</div>
+</template>
+
+<!-- simple template that displays a message -->
+<template name="chat_message">
+	{{user}} : {{text}}
+	<br>
+</template>
