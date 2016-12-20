@@ -102,26 +102,11 @@ Template.chat_page.events({
         // see if we can find a chat object in the database
         // to which we'll add the message
         var chat = Chats.findOne({_id:Session.get("chatId")});
-        if (chat){// ok - we have a chat to use
-            var msgs = chat.messages; // pull the messages property
-            if (!msgs){// no messages yet, create a new array
-                msgs = [];
+        var id = Meteor.call("updateMessages", chat, event.target.chat.value, function(err, res){
+            if(!err) {
+              Session.set("msgid",res);
             }
-            var user = Meteor.users.findOne({_id:Meteor.user()._id})
-            var username = user.profile.username;
-            // is a good idea to insert data straight from the form
-            // (i.e. the user) into the database?? certainly not. 
-            // push adds the message to the end of the array
-            msgs.push({
-              user: username,
-              text: event.target.chat.value
-            });
-            // reset the form
-            event.target.chat.value = "";
-            // put the messages array onto the chat object
-            chat.messages = msgs;
-            // update the chat object in the database.
-            Chats.update(chat._id, chat);
-        }
+        });
+        event.target.chat.value = "";
     }
 })
