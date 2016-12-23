@@ -1,7 +1,6 @@
 Meteor.methods({
   //methods to add a new chat message
   updateMessages:function(chat, msg){
-    console.log("msg:"+msg);
     if (!this.userId){ //not logged in
       return;
     }
